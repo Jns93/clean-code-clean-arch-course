@@ -9,6 +9,7 @@ use Exception;
 class Order
 {
     private $cpf;
+    private $coupon;
     // private $items;
 
     public function __construct($cpf)
@@ -19,20 +20,17 @@ class Order
 
     protected function setCPF($cpf)
     {
-        $cpfEntity = new Cpf($cpf);
-        // $response = $cpfEntity->validateCPF($cpf);
-        // if(!$response) throw new Exception("CPF is invalid");
-        // $this->cpf = $cpf;
+        $this->cpf = new Cpf($cpf);
     }
 
     public function addItem(string $description, float $price, int $quantity)
     {
         array_push($this->items, new OrderItem($description, $price, $quantity));
-        // array_push($this->items, (object)[
-        //     'description' => $description,
-        //     'price' => $price,
-        //     'quantity' => $quantity
-        // ]);
+    }
+
+    public function addDiscountCoupon($coupon)
+    {
+        $this->coupon = $coupon;
     }
 
     public function getTotal()
@@ -41,6 +39,10 @@ class Order
         foreach ($this->items as $item) {
             $total += $item->getTotal();
         }
+        if ($this->coupon) {
+            $total -= $total * ($this->coupon->percentageDiscount) / 100;
+        }
         return intval($total);
     }
+
 }
