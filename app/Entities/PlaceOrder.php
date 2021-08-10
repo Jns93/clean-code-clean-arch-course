@@ -12,7 +12,7 @@ class PlaceOrder
 
     public function __construct()
     {
-        $this->coupon = new DiscountCoupon("VALE20", 20);
+        $this->coupon = new DiscountCoupon("VALE20", 20, '01/01/2150 00:00:00');
         $this->orders = [];
     }
 

@@ -44,7 +44,7 @@ class OrderTest extends TestCase
         $entityOrder->addItem("Guitarra", 1000, 2);
         $entityOrder->addItem("Amplificador", 5000, 1);
         $entityOrder->addItem("Cabo", 30, 3);
-        $entityOrder->addDiscountCoupon(new DiscountCoupon("VALE20", 10));
+        $entityOrder->addDiscountCoupon(new DiscountCoupon("VALE20", 10, '2050/01/01 00:00:00'));
         $total = $entityOrder->getTotal();
         $this->assertEquals(6381, $total);
     }
