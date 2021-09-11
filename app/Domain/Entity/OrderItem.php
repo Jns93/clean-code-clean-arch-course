@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Entities;
+namespace App\Domain\Entity;
 
 use Illuminate\Validation\ValidationException;
 use Exception;
 
 class OrderItem
 {
-    public $description;
+    public $code;
     public $price;
     public $quantity;
 
-    public function __construct(string $description = null, float $price = null, int $quantity = null)
+    public function __construct(string $code = null, float $price = null, int $quantity = null)
     {
-        $this->$description = $description;
+        $this->$code = $code;
         $this->price = $price;
         $this->quantity = $quantity;
     }

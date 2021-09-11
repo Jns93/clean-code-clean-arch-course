@@ -1,21 +1,24 @@
 <?php
 
-namespace App\Entities;
+namespace App\Domain\Entity;
 
-use App\Entities\Cpf;
+use App\Domain\Entity\Cpf;
 use Illuminate\Validation\ValidationException;
 use Exception;
+use App\Domain\Entity\OrderItem;
 
 class Order
 {
     private $cpf;
     private $coupon;
+    public $freight;
     // private $items;
 
     public function __construct($cpf)
     {
         $this->setCPF($cpf);
         $this->items = [];
+        $this->freight = 0;
     }
 
     protected function setCPF($cpf)
@@ -23,14 +26,16 @@ class Order
         $this->cpf = new Cpf($cpf);
     }
 
-    public function addItem(string $description, float $price, int $quantity)
+    public function addItem(int $code , float $price, int $quantity)
     {
-        array_push($this->items, new OrderItem($description, $price, $quantity));
+        array_push($this->items, new OrderItem($code , $price, $quantity));
     }
 
     public function addDiscountCoupon($coupon)
     {
-        $this->coupon = $coupon;
+        if (!$coupon->isExpired()){
+            $this->coupon = $coupon;
+        }
     }
 
     public function getTotal()
@@ -42,6 +47,7 @@ class Order
         if ($this->coupon) {
             $total -= $total * ($this->coupon->percentageDiscount) / 100;
         }
+        $total += $this->freight;
         return intval($total);
     }
 
