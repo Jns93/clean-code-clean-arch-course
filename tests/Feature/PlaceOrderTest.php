@@ -107,4 +107,28 @@ class PlaceOrderTest extends TestCase
         $output = $placeOrder->execute($input);
         $this->assertEquals(310, $output->freight);
     }
+
+    public function test_place_order_calculating_code()
+    {
+        $cpf = '778.278.412-36';
+        $zipcode = '11.111-11';
+        $item['code'] = 1;
+        $item['quantity'] = 2;
+        $item2['code'] = 2;
+        $item2['quantity'] = 1;
+        $item3['code'] = 3;
+        $item3['quantity'] = 3;
+        $coupon = 'VALE20_EXPIRED';
+
+        $input = new PlaceOrderInput($cpf, $zipcode, array($item, $item2, $item3), $coupon, '2021');
+
+        $couponRepository = new CouponRepositoryMemory();
+        $itemRepository = new ItemRepositoryMemory();
+        $orderRepository = new OrderRepositoryMemory();
+        $zipcodeCalculator = new ZipcodeCalculatorAPIMemory();
+        $placeOrder = new PlaceOrder($itemRepository, $couponRepository, $orderRepository, $zipcodeCalculator);
+        $placeOrder->execute($input);
+        $output = $placeOrder->execute($input); //Criando 2 order para testar a criação do codigo do pedido
+        $this->assertEquals("202100000002", $output->code);
+    }
 }

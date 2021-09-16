@@ -41,7 +41,8 @@ class PlaceOrder
 
     public function execute(PlaceOrderInput $input)
     {
-        $order = new Order($input->cpf);
+        $sequence = $this->orderRepository->count() + 1;
+        $order = new Order($input->cpf, $input->issueDate, $sequence);
         $distance = $this->zipcodeCalculator->calculate($input->zipcode, "99.999-999");
         foreach($input->items as $orderItem) {
             // $item = $this->items[$this->findByCode($orderItem['code'])];    --A interface abaixo substitui essa implementação. (Strategy + dependency Inversion)
@@ -65,7 +66,8 @@ class PlaceOrder
         $this->orderRepository->save($order);
         $total = $order->getTotal();
         $freight = $order->freight;
-        return new PlaceOrderOutput($freight, $total);
+        $code = $order->code->value;
+        return new PlaceOrderOutput($code, $freight, $total);
     }
 
     // private function findByCode($code)

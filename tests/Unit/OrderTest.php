@@ -60,4 +60,16 @@ class OrderTest extends TestCase
         $total = $entityOrder->getTotal();
         $this->assertEquals(7090  , $total);
     }
+
+    public function test_create_order_calculating_code()
+    {
+        $cpf = '790.824.420-35';
+        $entityOrder = new Order($cpf, '2021', 1);
+        $entityOrder->addItem(1, 1000, 2);
+        $entityOrder->addItem(2, 5000, 1);
+        $entityOrder->addItem(3, 30, 3);
+        $entityOrder->addDiscountCoupon(new DiscountCoupon("VALE20", 10, '2000/01/01 00:00:00'));
+        $total = $entityOrder->getTotal();
+        $this->assertEquals("202100000001"  , $entityOrder->code->value);
+    }
 }

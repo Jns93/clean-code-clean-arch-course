@@ -6,19 +6,25 @@ use App\Domain\Entity\Cpf;
 use Illuminate\Validation\ValidationException;
 use Exception;
 use App\Domain\Entity\OrderItem;
+use App\Domain\Entity\OrderCode;
 
 class Order
 {
     private $cpf;
     private $coupon;
     public $freight;
-    // private $items;
+    public $code;
+    private $issueDate;
+    private $sequence;
 
-    public function __construct($cpf)
+    public function __construct($cpf, $issueDate = "2050", int $sequence = 1)
     {
         $this->setCPF($cpf);
         $this->items = [];
         $this->freight = 0;
+        $this->issueDate = $issueDate;
+        $this->sequence = $sequence;
+        $this->code = new OrderCode($issueDate, $sequence);
     }
 
     protected function setCPF($cpf)
@@ -26,7 +32,7 @@ class Order
         $this->cpf = new Cpf($cpf);
     }
 
-    public function addItem(int $code , float $price, int $quantity)
+    public function addItem(string $code , float $price, int $quantity)
     {
         array_push($this->items, new OrderItem($code , $price, $quantity));
     }

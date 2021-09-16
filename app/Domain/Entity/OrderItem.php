@@ -13,7 +13,7 @@ class OrderItem
 
     public function __construct(string $code = null, float $price = null, int $quantity = null)
     {
-        $this->$code = $code;
+        $this->code = $code;
         $this->price = $price;
         $this->quantity = $quantity;
     }
